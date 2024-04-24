@@ -1,0 +1,267 @@
+<div class="container position-absolute top-50 start-50 translate-middle grid">
+  <div class="row align-items-center">
+    <div class="col-lg-6 col-md-12 col-12">
+      <p class="font-bold text-center text-50 text-6xl border-bottom-1 surface-border  w-full">
+        Taxi Alternatif</p>
+      <p class="font-medium text-center text-200 text-2xl">Safe Driver</p>
+    </div>
+
+    <div class="col-lg-6 col-md-12 col-12">
+      <div class="card bg-white-100 border-round">
+        <div class="card-body">
+          <form
+            #f="ngForm"
+            (ngSubmit)="f.form.valid && onSubmit()"
+            *ngIf="!submitted"
+            class="row g-2"
+            name="form"
+            needs-validation
+            novalidate
+          >
+            <div class="text-center mb-2">
+              <div class="text-900 text-3xl font-bold mb-3">Online prices</div>
+              <div class="text-800 text-xl font-medium mb-3">Urgent reservation: please call us</div>
+              <div class="text-800 text-xl font-medium mb-3">Transport for groups: please call us</div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-12">
+              <hr>
+            </div>
+            <div class="col-lg-12 col-md-12 col-12">
+              <label class="form-label" for="startingAddress">Starting address</label>
+              <div class="p-inputgroup mb-1">
+                <span (click)="getMyCurrentLocation()" class="input-group-text">
+                  <i
+                    [ngClass]="currentPosition ? 'text-blue-500 fa-location-dot' : 'text-900 fa-location-dot'"
+                    class="fa-solid"></i>
+                </span>
+                <p-autoComplete (completeMethod)="searchAddress($event)"
+                                (onSelect)="onSelectStartingAddress($event, false)"
+                                *ngIf="!currentPosition && !isStartingAddressInputValid"
+                                [minLength]="1"
+                                [suggestions]="searchResults"
+                                field="properties.display_name" id="startingAddress" name="startingAddress"
+                                placeholder="Search Starting address" styleClass="w-full">
+                  <ng-template let-result pTemplate="item">
+                    {{result.properties.display_name}}
+                  </ng-template>
+                </p-autoComplete>
+                <input #startingAddress="ngModel" (input)="checkValidity(1,$event)"
+                       *ngIf="currentPosition"
+                       [(ngModel)]="form!.startingAddress!"
+                       [ngClass]="{
+             'ng-dirty': (startingAddress.invalid && submitted) || (startingAddress.dirty && startingAddress.invalid),
+             'is-invalid': (startingAddress.invalid && submitted) || (startingAddress.dirty && startingAddress.invalid),
+             'is-valid': isStartingAddressInputValid
+             }"
+                       class="form-control"
+                       id="startingAddress"
+                       name="startingAddress"
+                       pInputText
+                       placeholder="Starting address"
+                       required
+                       type="text"
+                />
+              </div>
+              <!--<small *ngIf="isStartingAddressInputValid" class="p-success">Looks good!.</small>
+              <small
+                *ngIf="(startingAddress.invalid && submitted) || (startingAddress.dirty && startingAddress.invalid) "
+                class="p-error"> Starting address is required.</small>-->
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-12">
+              <label class="form-label" for="arrivalAddress">Arrival address</label>
+              <div class="p-inputgroup mb-1">
+                <span class="input-group-text">
+                  <i class="fa-solid fa-location-dot"></i>
+                </span>
+                <p-autoComplete (completeMethod)="searchAddress($event)"
+                                (onSelect)="onSelectArrivalAddress($event)"
+                                [minLength]="1"
+                                [suggestions]="searchResults"
+                                field="properties.display_name" id="arrivalAddress" name="arrivalAddress"
+                                placeholder="Search Arrival address" styleClass="w-full">
+                  <ng-template let-result pTemplate="item">
+                    {{result.properties.display_name}}
+                  </ng-template>
+                </p-autoComplete>
+                <!--<input #arrivalAddress="ngModel"
+                       (input)="checkValidity(2,$event)"
+                       [(ngModel)]="form!.arrivalAddress!"
+                       [ngClass]="{
+             'ng-dirty': (arrivalAddress.invalid && submitted) || (arrivalAddress.dirty && arrivalAddress.invalid),
+             'is-invalid': (arrivalAddress.invalid && submitted) || (arrivalAddress.dirty && arrivalAddress.invalid),
+             'is-valid': isArrivalAddressInputValid
+             }"
+                       class="form-control"
+                       id="arrivalAddress"
+                       name="arrivalAddress"
+                       pInputText
+                       placeholder="Arrival address"
+                       required
+                       type="text"
+                />-->
+              </div>
+              <!--<small *ngIf="isArrivalAddressInputValid" class="p-success">Looks good!.</small>
+              <small
+                *ngIf="(arrivalAddress.invalid && submitted) || (arrivalAddress.dirty && arrivalAddress.invalid) "
+                class="p-error">Arrival address is required.</small>-->
+            </div>
+
+
+            <div class="col-lg-6 col-md-12 col-12">
+              <label class="form-label">Date</label>
+              <div class="p-inputgroup mb-1">
+                <p-calendar #date="ngModel"
+                            (onSelect)="checkValidity(3,$event)"
+                            [(ngModel)]="form!.date!"
+                            [ngClass]="{
+                'ng-dirty': (date.invalid && submitted) || (date.dirty && date.invalid),
+                'is-invalid': (date.invalid && submitted) || (date.dirty && date.invalid),
+                'is-valid': isDateInputValid }"
+                            [readonlyInput]="true"
+                            [showIcon]="true"
+                            id="date"
+                            name="date"
+                >
+                </p-calendar>
+              </div>
+              <small *ngIf="isDateInputValid" class="p-success">Looks good!.</small>
+              <small
+                *ngIf="(date.invalid && submitted) || (date.dirty && date.invalid) "
+                class="p-error">Date is required.</small>
+            </div>
+
+            <div class="col-lg-6 col-md-12 col-12">
+              <label class="form-label">Time</label>
+              <div class="p-inputgroup mb-1">
+                <p-calendar #time="ngModel"
+                            (onSelect)="checkValidity(4,$event)"
+                            [(ngModel)]="form!.time!"
+                            [ngClass]="{
+                'ng-dirty': (time.invalid && submitted) || (time.dirty && time.invalid),
+                'is-invalid': (time.invalid && submitted) || (time.dirty && time.invalid),
+                'is-valid': isDateInputValid }"
+                            [readonlyInput]="true"
+                            [showIcon]="true"
+                            [stepMinute]="15"
+                            [timeOnly]="true"
+                            id="time"
+                            name="time"
+                >
+                </p-calendar>
+              </div>
+              <small *ngIf="isTimeInputValid" class="p-success">Looks good!.</small>
+              <small
+                *ngIf="(time.invalid && submitted) || (time.dirty && date.invalid) "
+                class="p-error">Time is required.</small>
+            </div>
+
+            <div class="col-lg-4 col-md-12 col-12">
+              <label class="form-label" for="vehicle">Vehicle</label>
+              <div class="p-inputgroup mb-1">
+                <span class="input-group-text">
+                  <i class="fa-solid fa-car"></i>
+                </span>
+                <input #vehicle="ngModel"
+                       (input)="checkValidity(5,$event)"
+                       [(ngModel)]="form!.vehicle!"
+                       [ngClass]="{
+             'ng-dirty': (vehicle.invalid && submitted) || (vehicle.dirty && vehicle.invalid),
+             'is-invalid': (vehicle.invalid && submitted) || (vehicle.dirty && vehicle.invalid),
+             'is-valid': isVehicleInputValid
+             }"
+                       class="form-control"
+                       id="vehicle"
+                       name="vehicle"
+                       pInputText
+                       placeholder="Vehicle"
+                       required
+                       type="text"
+                />
+              </div>
+              <small *ngIf="isVehicleInputValid" class="p-success">Looks good!.</small>
+              <small
+                *ngIf="(vehicle.invalid && submitted) || (vehicle.dirty && vehicle.invalid) "
+                class="p-error">Vehicle is required.</small>
+            </div>
+
+            <div class="col-lg-4 col-md-12 col-12">
+              <label class="form-label" for="passengers">Passengers</label>
+              <div class="p-inputgroup mb-1">
+                <span class="input-group-text">
+                  <i class="fa-solid fa-users"></i>
+                </span>
+                <input #passengers="ngModel"
+                       (input)="checkValidity(6,$event)"
+                       [(ngModel)]="form!.passengers!"
+                       [ngClass]="{
+             'ng-dirty': (passengers.invalid && submitted) || (passengers.dirty && passengers.invalid),
+             'is-invalid': (passengers.invalid && submitted) || (passengers.dirty && passengers.invalid),
+             'is-valid': isPassengersInputValid
+             }"
+                       class="form-control"
+                       id="passengers"
+                       name="passengers"
+                       pInputText
+                       placeholder="Passengers"
+                       required
+                       type="number"
+                />
+              </div>
+              <small *ngIf="isPassengersInputValid" class="p-success">Looks good!.</small>
+              <small
+                *ngIf="(passengers.invalid && submitted) || (passengers.dirty && passengers.invalid) "
+                class="p-error">Passengers is required.</small>
+            </div>
+
+            <div class="col-lg-4 col-md-12 col-12">
+              <label class="form-label" for="baggage">Baggage</label>
+              <div class="p-inputgroup mb-1">
+                <span class="input-group-text">
+                  <i class="fa-solid fa-suitcase-rolling"></i>
+                </span>
+                <input #baggage="ngModel"
+                       (input)="checkValidity(7,$event)"
+                       [(ngModel)]="form!.baggage!"
+                       [ngClass]="{
+             'ng-dirty': (baggage.invalid && submitted) || (baggage.dirty && baggage.invalid),
+             'is-invalid': (baggage.invalid && submitted) || (baggage.dirty && baggage.invalid),
+             'is-valid': isBaggageInputValid
+             }"
+                       class="form-control"
+                       id="baggage"
+                       name="baggage"
+                       pInputText
+                       placeholder="Baggage"
+                       required
+                       type="number"
+                />
+              </div>
+              <small *ngIf="isBaggageInputValid" class="p-success">Looks good!.</small>
+              <small
+                *ngIf="(baggage.invalid && submitted) || (baggage.dirty && baggage.invalid) "
+                class="p-error">Baggage is required.</small>
+            </div>
+
+            <button [disabled]="!f.form.valid" class="p-button-info w-full" label="Price estimate" pButton
+                    pRipple></button>
+
+            <div class="col-lg-12 col-md-12 col-12 mb-4">
+              <div (leafletClick)="mapClicked($event)"
+                   (leafletMapReady)="onMapReady($event)"
+                   [leafletOptions]="options"
+                   class="map-container"
+                   leaflet>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

@@ -1,0 +1,70 @@
+<br><br>
+<div class="container position-absolute top-50 start-50 translate-middle">
+  <div class="row align-items-center">
+    <div class="col-lg-6 col-md-12 col-12">
+      <p
+        class="font-bold text-center text-blue-500 hover:text-orange-700 text-6xl border-bottom-1 surface-border surface-overlay w-full">
+        COCO TUNISIA</p>
+      <p class="font-medium text-center text-black-alpha-80 text-2xl">With Coco Tunisia,manage and stay in touch with
+        your customers.
+      </p>
+    </div>
+    <div class="col-lg-6 col-md-12 col-12">
+      <div class="card bg-blue-100 border-round">
+        <div class="card-body">
+          <form
+            #f="ngForm"
+            (ngSubmit)="f.form.valid && onSubmit()"
+            *ngIf="!isLoggedIn"
+            name="form"
+            novalidate
+          >
+            <div class="text-center mb-5">
+              <img alt="Image" class="mb-3" height="70" src="assets/images/logo.png">
+              <div class="text-900 text-3xl font-medium mb-3">Welcome, Partner!</div>
+            </div>
+
+            <div class="mb-3">
+              <input #username="ngModel" [(ngModel)]="form.username" aria-describedby="username-help"
+                     class="w-full mb-1 ng-invalid ng-dirty" id="username" name="username"
+                     pInputText placeholder="Username" required
+                     type="text"/>
+              <small *ngIf="username.errors && f.submitted" class="p-error" id="username-help">Account name
+                required.</small>
+            </div>
+
+            <div class="mb-3">
+              <input #password="ngModel" [(ngModel)]="form.password" aria-describedby="password-help"
+                     class="w-full mb-1 ng-invalid ng-dirty" id="password"
+                     name="password" pInputText placeholder="Mot de passe" required
+                     type="password"/>
+              <small *ngIf="password.errors && f.submitted" class="p-error" id="password-help">Password
+                required.</small>
+            </div>
+
+            <button [disabled]="!f.form.valid" class="p-button-info w-full" label="Sign in" pButton
+                    pRipple></button>
+
+            <div *ngIf="f.submitted && isLoginFailed && errorMessage === ''"
+                 class="flex align-items-center justify-content-center p-error m-2">
+              Account name or the password you entered is not associated with an account.
+            </div>
+            <div *ngIf="f.submitted && isLoginFailed && errorMessage !== ''"
+                 class="flex align-items-center justify-content-center p-error m-2">
+              {{errorMessage}}
+            </div>
+            <div class="flex align-items-center justify-content-center">
+              <a (click)="resetPassword()"
+                 class="font-medium text-center underline mt-2 text-blue-500 cursor-pointer">Forgot your
+                password?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

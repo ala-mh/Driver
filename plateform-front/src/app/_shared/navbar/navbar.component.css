@@ -1,0 +1,24 @@
+.nav {
+  height: 100%;
+}
+
+.side-nav-button {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.side-nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 30%;
+}
+
+.dropdown-menu {
+  background-color: white;
+}
+
+.dropdown-item:hover {
+  background-color: #e9ecef;
+}
