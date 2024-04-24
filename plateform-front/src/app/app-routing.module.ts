@@ -8,14 +8,6 @@ import {HomeComponent} from "./home/home.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
-  /*{path: 'login', component: LoginComponent},
-  {path: 'forgot-password', component: ForgotPasswordComponent},
-  {
-    path: 'reset-password/:resetPasswordAccessToken',
-    component: ResetPasswordComponent,
-    canActivate: [ResetPasswordGuard]
-  },*/
-
   {
     path: 'board', component: BoardComponent, canActivate: [AuthGuard],
     children: [
